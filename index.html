@@ -21,9 +21,8 @@
         </div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
-            <li><a href="#leaderboard">Leaderboard</a></li>
-            <li><a href="#stats">Server Stats</a></li>
             <li><a href="#races">Races</a></li>
+            <li><a href="#about">About</a></li>
         </ul>
         <div class="nav-btns">
             <a href="https://discord.gg/YXgzXAkmmH" class="btn-primary join-btn">JOIN DISCORD</a>
@@ -36,8 +35,8 @@
             <p class="hero-subtext">Pantau peringkat petualang terkuat di Nihilthoria secara real-time. Bergabunglah dan
                 ukir namamu dalam sejarah.</p>
             <div class="hero-btns">
-                <button class="btn-glow" onclick="document.getElementById('leaderboard').scrollIntoView()">LIHAT
-                    PERINGKAT</button>
+                <button class="btn-glow" onclick="document.getElementById('races').scrollIntoView()">JELAJAHI
+                    DUNIA</button>
                 <button class="btn-outline" onclick="window.location.href='https://discord.gg/YXgzXAkmmH'">GABUNG
                     SEKARANG</button>
             </div>
@@ -57,92 +56,9 @@
         </div>
     </div>
 
-    <!-- Server Stats Section -->
-    <section id="stats" class="stats-showcase" style="padding: 50px 10%; min-height: auto;">
-        <h2 class="section-title">SERVER STATISTICS</h2>
-        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="stat-box">
-                <span class="stat-val" id="stat-players">0</span>
-                <span class="stat-lbl">Registered Adventurers</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-val" id="stat-discord">0</span>
-                <span class="stat-lbl">Discord Members</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-val" style="color: #00cec9; text-shadow: 0 0 10px #00cec9;" id="stat-chill">0</span>
-                <span class="stat-lbl">Chill Residents</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-val">Online</span>
-                <span class="stat-lbl">Server Status</span>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Leaderboard Section -->
-    <section id="leaderboard" class="leaderboard-section" style="padding-top: 50px;">
-        <h2 class="section-title">HALL OF FAME</h2>
-        <p class="section-desc">Top Adventurers based on various achievements.</p>
-
-        <!-- Search & Filters -->
-        <div class="leaderboard-controls">
-            <div class="search-container">
-                <input type="text" id="char-search" placeholder="Cari nama character..." onkeyup="handleSearch(event)">
-                <button onclick="performSearch()">🔍</button>
-            </div>
-
-            <div class="filter-buttons">
-                <button class="filter-btn" onclick="switchLeaderboard('general')">📊 General</button>
-                <button class="filter-btn active" onclick="switchLeaderboard('rpg')">🏆 RPG Level</button>
-                <button class="filter-btn" onclick="switchLeaderboard('money')">💰 Wealth</button>
-                <button class="filter-btn" onclick="switchLeaderboard('rp')">🎭 RP Points</button>
-                <button class="filter-btn" onclick="switchLeaderboard('clan')">🏰 Clans</button>
-                <button class="filter-btn" onclick="switchLeaderboard('pk')">⚔️ PK</button>
-                <button class="filter-btn" onclick="switchLeaderboard('bounty')">📜 Bounty</button>
-                <button class="filter-btn" onclick="switchLeaderboard('race')">🧬 Races</button>
-                <button class="filter-btn" onclick="switchLeaderboard('gatherer')">📦 Gatherer</button>
-                <button class="filter-btn" onclick="switchLeaderboard('crafter')">🔨 Crafter</button>
-                <button class="filter-btn" onclick="switchLeaderboard('hunter')">🏹 Hunter</button>
-                <button class="filter-btn" onclick="switchLeaderboard('boss')">👹 Boss Slayer</button>
-                <button class="filter-btn" onclick="switchLeaderboard('heroes')">🛡️ Heroes</button>
-                <button class="filter-btn" onclick="switchLeaderboard('villains')">😈 Villains</button>
-            </div>
-        </div>
-
-        <div class="leaderboard-container">
-            <!-- Grid Layout -->
-            <div id="character-grid" class="character-grid">
-                <!-- Filled by JS -->
-            </div>
-
-            <!-- Pagination Controls -->
-            <div class="pagination-controls">
-                <button id="prev-btn" class="btn-outline" onclick="changePage(-1)" disabled>⬅️ PREV</button>
-                <span id="page-indicator">Page 1</span>
-                <button id="next-btn" class="btn-outline" onclick="changePage(1)">NEXT ➡️</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Market Section -->
-    <section id="market" class="market-section"
-        style="padding: 100px 10%; background: linear-gradient(to bottom, rgba(10, 5, 20, 0.8), rgba(138, 43, 226, 0.05)); text-align: center;">
-        <h2 class="section-title">AUCTION HOUSE</h2>
-        <p class="section-desc">Real-time marketplace listings from adventurers.</p>
-
-        <div id="market-loading" style="display:none; color:var(--text-muted);">Loading market data...</div>
-        <div id="market-grid" class="market-grid"
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-            <!-- Filled by JS -->
-        </div>
-        <button class="btn-outline" onclick="loadMarket()" style="margin-top: 2rem;">🔄 REFRESH MARKET</button>
-    </section>
 
     <section id="races" class="races-section">
-        <h2 class="section-title">WARISAN LELUHUR</h2>
+        <h2 class="section-title">RACES</h2>
         <p class="section-desc">16 Ras Kuno yang membentuk dunia Nihilthoria.</p>
         <!-- Race Grid Content Preserved (Shortened for brevity but logically here) -->
         <div id="race-grid" class="race-grid">

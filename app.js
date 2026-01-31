@@ -231,6 +231,33 @@ const RACES = {
     etherealbeing: { name: 'Ethereal Being', emoji: '👻', tier: 'Mythical', desc: 'Entitas transenden dari sihir murni.', stats: 'Spell Power +50%, Cooldown -30%, Mana Regen +20%' }
 };
 
+// Initial Load
+document.addEventListener('DOMContentLoaded', () => {
+    renderRaceCards();
+    loadLatestActivity();
+    // Refresh activity every 30s
+    setInterval(loadLatestActivity, 30000);
+});
+
+// Latest Activity System (Ticker)
+async function loadLatestActivity() {
+    try {
+        const res = await fetch(`${API_URL}/activities`);
+        const activities = await res.json();
+        const ticker = document.getElementById('activity-ticker');
+        if (ticker && activities.length > 0) {
+            ticker.innerHTML = activities.map(act => `
+                <div class="ticker-item" onclick="showCharacterProfile('${act.userId}')">
+                    <span class="ticker-time">${new Date(act.timestamp).toLocaleTimeString()}</span>
+                    ${act.message}
+                </div>
+            `).join('');
+        }
+    } catch (err) {
+        console.error('Failed to load activity', err);
+    }
+}
+
 // API Connection Configuration
 // 1. If you are using Nura.host, put your HTTPS URL here:
 const NURA_HOST_URL = 'http://nl-2.nura.host:25562';
@@ -252,150 +279,9 @@ const API_URL = (() => {
     return '/api';
 })();
 
-// Fetch Server Stats
-async function loadServerStats() {
-    try {
-        const res = await fetch(`${API_URL}/stats`);
-        const stats = await res.json();
-
-        if (stats.totalPlayers !== undefined) {
-            animateValue('stat-players', 0, stats.totalPlayers, 1500);
-        }
-        if (stats.discordMembers !== undefined) {
-            animateValue('stat-discord', 0, stats.discordMembers, 1500);
-        }
-        if (stats.chillMembers !== undefined) {
-            animateValue('stat-chill', 0, stats.chillMembers, 1500);
-        }
-    } catch (err) {
-        console.error('Failed to load stats', err);
-    }
-}
-
-// Character Grid State
-let currentPage = 1;
-let currentSort = 'rpg'; // Renamed from currentLeaderboardType for clarity
-const ITEMS_PER_PAGE = 10;
-
-// Switch Category / Sort
-function switchLeaderboard(type) {
-    currentSort = type;
-    currentPage = 1; // Reset to page 1
-
-    // Update Active Button
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-
-    const activeBtn = document.querySelector(`button[onclick="switchLeaderboard('${type}')"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-
-    // Reload Data
-    loadCharacters();
-}
-
-// Change Page
-function changePage(delta) {
-    const newPage = currentPage + delta;
-    if (newPage < 1) return;
-
-    currentPage = newPage;
-    loadCharacters();
-}
-
-// Search State
-let searchTerm = '';
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        performSearch();
-    }
-}
-
-function performSearch() {
-    const input = document.getElementById('char-search');
-    searchTerm = input.value.trim();
-    currentPage = 1; // Reset to first page
-    loadCharacters();
-}
-
-// Fetch Characters
-async function loadCharacters() {
-    try {
-        const grid = document.getElementById('character-grid');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const pageInd = document.getElementById('page-indicator');
-
-        // Update Controls State immediately
-        if (pageInd) pageInd.innerText = `Page ${currentPage}`;
-        if (prevBtn) prevBtn.disabled = currentPage <= 1;
-
-        // Fade out slightly to indicate loading
-        if (grid) grid.style.opacity = '0.5';
-
-        const res = await fetch(`${API_URL}/leaderboard?type=${currentSort}&limit=${ITEMS_PER_PAGE}&page=${currentPage}&search=${encodeURIComponent(searchTerm)}`);
-        const data = await res.json();
-
-        // Clear grid (Pagination always replaces)
-        if (grid) {
-            grid.innerHTML = '';
-            grid.style.opacity = '1';
-        }
-
-        if (data.length === 0 && currentPage === 1) {
-            if (grid) grid.innerHTML = `<div class="empty-msg" style="grid-column: 1/-1;">No characters found.</div>`;
-            if (nextBtn) nextBtn.disabled = true;
-        } else {
-            // Check if we reached the end
-            if (nextBtn) {
-                // If we got fewer items than limit, it's the last page
-                nextBtn.disabled = data.length < ITEMS_PER_PAGE;
-            }
-
-            data.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'char-card';
-
-                // Only allow clicking if they have a character profile
-                // For 'general' type, hasCharacter is explicitly false for non-registered users
-                // For other types, it's undefined (assumed true as they come from Character DB)
-                if (currentSort === 'race') {
-                    card.onclick = () => renderRaceDetail(p.name.toLowerCase().replace(/\s/g, ''));
-                } else if (currentSort === 'clan') {
-                    card.onclick = () => showClanProfile(p.clanId);
-                } else if (p.hasCharacter === false) {
-                    card.style.cursor = 'default';
-                    card.onclick = () => {
-                        openModal(`<div style="text-align:center; padding: 2rem;">
-                            <h3>Not Registered</h3>
-                            <p>This user has not created an RPG character yet.</p>
-                         </div>`);
-                    };
-                } else {
-                    card.onclick = () => showCharacterProfile(p.userId);
-                }
-
-                card.innerHTML = renderCharacterCard(p);
-                grid.appendChild(card);
-            });
-        }
-    } catch (err) {
-        console.error('Failed to load characters', err);
-        const grid = document.getElementById('character-grid');
-        if (grid) {
-            grid.innerHTML = `<div class="error-msg" style="grid-column: 1/-1; color: var(--danger);">Failed to load data.</div>`;
-            grid.style.opacity = '1';
-        }
-    }
-}
-
-// Show Clan Profile
-async function showClanProfile(clanId) {
-    const modal = document.getElementById('info-modal');
+async function viewClanDetails(clanId) {
     const body = document.getElementById('modal-body');
-
-    body.innerHTML = '<div class="loading-spinner">Loading Clan Data...</div>';
-    modal.style.display = 'flex';
-    setTimeout(() => modal.style.opacity = '1', 10);
+    if (!body) return;
 
     try {
         const res = await fetch(`${API_URL}/clan/${clanId}`);
