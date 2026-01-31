@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
-const PORT = process.env.PORT || process.env.WEB_PORT || 3000;
+const PORT = process.env.PORT || process.env.WEB_PORT || 25562;
 
 // Middleware
 app.use(cors());
@@ -547,4 +547,5 @@ module.exports = (client) => {
     app.listen(PORT, () => {
         console.log(`Web Dashboard Server running at http://localhost:${PORT}`);
     });
+};
 };
