@@ -42,6 +42,7 @@ async function showCharacterProfile(userId) {
         const data = await res.json();
         const { character, equipment, levels, inventory } = data;
         const stats = character.stats || {};
+        const survival = character.survival || { health: 100, hungry: 100, thirst: 100, sleep: 100 };
         const currency = character.currency || { gold: 0, silver: 0, bronze: 0 };
 
         const html = `
@@ -53,8 +54,8 @@ async function showCharacterProfile(userId) {
             </div>
 
             <div class="profile-layout">
-                <!-- Sidebar: Details & Stats -->
-                <aside class="profile-sidebar">
+                <!-- Left Column: Bio & Main Stats -->
+                <div class="profile-sidebar">
                     <div style="text-align:center; margin-bottom: 2rem;">
                         <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">${character.emoji || '👤'}</h1>
                         <span class="lvl-badge" style="font-size: 1rem;">Job: ${character.job || 'Unemployed'}</span>
@@ -75,8 +76,8 @@ async function showCharacterProfile(userId) {
                                 <div class="mp-bar" style="width: 100%; height:100%;"></div>
                             </div>
                         </div>
-                <!-- Left Column: Bio & Main Stats -->
-                <div class="profile-sidebar">
+                    </div>
+
                     <div class="section-box">
                         <div class="box-title">IDENTITY</div>
                         <div style="margin-bottom: 1rem; font-style: italic; color: #ccc;">
@@ -127,7 +128,7 @@ async function showCharacterProfile(userId) {
                             </div>
                         </div>
                         
-                        <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem;">
                             <div class="stat-row"><span>Crit Rate</span> <span>${stats.criticalRate || 0}%</span></div>
                             <div class="stat-row"><span>Crit Dmg</span> <span>${stats.criticalDamage || 0}%</span></div>
                             <div class="stat-row"><span>Pen. ATK</span> <span>${stats.penAtk || 0}</span></div>
@@ -235,6 +236,28 @@ const RACES = {
 document.addEventListener('DOMContentLoaded', () => {
     renderRaceCards();
     loadLatestActivity();
+
+    // Mobile Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navContainer = document.querySelector('.nav-container');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    if (menuToggle && navContainer) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navContainer.classList.toggle('active');
+            document.body.style.overflow = navContainer.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navContainer.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+    }
+
     // Refresh activity every 30s
     setInterval(loadLatestActivity, 30000);
 });
