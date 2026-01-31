@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nihilthoria RPG | Real-time Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="stars-overlay"></div>
+
+    <nav class="glass-nav">
+        <div class="logo-container">
+            <img src="logo.png" alt="Nihilthoria Logo" class="nav-logo">
+            <span class="brand">NIHILTHORIA</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#leaderboard">Leaderboard</a></li>
+            <li><a href="#stats">Server Stats</a></li>
+            <li><a href="#races">Races</a></li>
+        </ul>
+        <div class="nav-btns">
+            <a href="https://discord.gg/YXgzXAkmmH" class="btn-primary join-btn">JOIN DISCORD</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="glitch-text" data-text="LEGENDS RISE HERE">LEGENDS RISE HERE</h1>
+            <p class="hero-subtext">Pantau peringkat petualang terkuat di Nihilthoria secara real-time. Bergabunglah dan
+                ukir namamu dalam sejarah.</p>
+            <div class="hero-btns">
+                <button class="btn-glow" onclick="document.getElementById('leaderboard').scrollIntoView()">LIHAT
+                    PERINGKAT</button>
+                <button class="btn-outline" onclick="window.location.href='https://discord.gg/YXgzXAkmmH'">GABUNG
+                    SEKARANG</button>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <img src="logo.png" alt="Ethereal Crown" class="floating-logo">
+        </div>
+    </section>
+
+    <!-- Activity Ticker -->
+    <div class="news-ticker-container">
+        <div class="ticker-label">LATEST EVENTS</div>
+        <div class="ticker-wrap">
+            <div class="ticker-move" id="activity-ticker">
+                <div class="ticker-item">Waiting for server updates...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server Stats Section -->
+    <section id="stats" class="stats-showcase" style="padding: 50px 10%; min-height: auto;">
+        <h2 class="section-title">SERVER STATISTICS</h2>
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="stat-box">
+                <span class="stat-val" id="stat-players">0</span>
+                <span class="stat-lbl">Registered Adventurers</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-val" id="stat-discord">0</span>
+                <span class="stat-lbl">Discord Members</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-val" style="color: #00cec9; text-shadow: 0 0 10px #00cec9;" id="stat-chill">0</span>
+                <span class="stat-lbl">Chill Residents</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-val">Online</span>
+                <span class="stat-lbl">Server Status</span>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="leaderboard-section" style="padding-top: 50px;">
+        <h2 class="section-title">HALL OF FAME</h2>
+        <p class="section-desc">Top Adventurers based on various achievements.</p>
+
+        <!-- Search & Filters -->
+        <div class="leaderboard-controls">
+            <div class="search-container">
+                <input type="text" id="char-search" placeholder="Cari nama character..." onkeyup="handleSearch(event)">
+                <button onclick="performSearch()">🔍</button>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="filter-btn" onclick="switchLeaderboard('general')">📊 General</button>
+                <button class="filter-btn active" onclick="switchLeaderboard('rpg')">🏆 RPG Level</button>
+                <button class="filter-btn" onclick="switchLeaderboard('money')">💰 Wealth</button>
+                <button class="filter-btn" onclick="switchLeaderboard('rp')">🎭 RP Points</button>
+                <button class="filter-btn" onclick="switchLeaderboard('clan')">🏰 Clans</button>
+                <button class="filter-btn" onclick="switchLeaderboard('pk')">⚔️ PK</button>
+                <button class="filter-btn" onclick="switchLeaderboard('bounty')">📜 Bounty</button>
+                <button class="filter-btn" onclick="switchLeaderboard('race')">🧬 Races</button>
+                <button class="filter-btn" onclick="switchLeaderboard('gatherer')">📦 Gatherer</button>
+                <button class="filter-btn" onclick="switchLeaderboard('crafter')">🔨 Crafter</button>
+                <button class="filter-btn" onclick="switchLeaderboard('hunter')">🏹 Hunter</button>
+                <button class="filter-btn" onclick="switchLeaderboard('boss')">👹 Boss Slayer</button>
+                <button class="filter-btn" onclick="switchLeaderboard('heroes')">🛡️ Heroes</button>
+                <button class="filter-btn" onclick="switchLeaderboard('villains')">😈 Villains</button>
+            </div>
+        </div>
+
+        <div class="leaderboard-container">
+            <!-- Grid Layout -->
+            <div id="character-grid" class="character-grid">
+                <!-- Filled by JS -->
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-controls">
+                <button id="prev-btn" class="btn-outline" onclick="changePage(-1)" disabled>⬅️ PREV</button>
+                <span id="page-indicator">Page 1</span>
+                <button id="next-btn" class="btn-outline" onclick="changePage(1)">NEXT ➡️</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Section -->
+    <section id="market" class="market-section"
+        style="padding: 100px 10%; background: linear-gradient(to bottom, rgba(10, 5, 20, 0.8), rgba(138, 43, 226, 0.05)); text-align: center;">
+        <h2 class="section-title">AUCTION HOUSE</h2>
+        <p class="section-desc">Real-time marketplace listings from adventurers.</p>
+
+        <div id="market-loading" style="display:none; color:var(--text-muted);">Loading market data...</div>
+        <div id="market-grid" class="market-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <!-- Filled by JS -->
+        </div>
+        <button class="btn-outline" onclick="loadMarket()" style="margin-top: 2rem;">🔄 REFRESH MARKET</button>
+    </section>
+
+    <section id="races" class="races-section">
+        <h2 class="section-title">WARISAN LELUHUR</h2>
+        <p class="section-desc">16 Ras Kuno yang membentuk dunia Nihilthoria.</p>
+        <!-- Race Grid Content Preserved (Shortened for brevity but logically here) -->
+        <div id="race-grid" class="race-grid">
+            <!-- Filled by JS -->
+        </div>
+    </section>
+
+    <!-- About / Narrative Hub Section -->
+    <section id="about" class="about-section" style="padding: 100px 10%;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 class="section-title">THE NARRATIVE HUB</h2>
+            <p class="section-desc">"Build Your World, Survive the Hardcore."</p>
+            <p style="max-width: 800px; margin: 0 auto; color: var(--text-muted); line-height: 1.8;">
+                Nihilthoria adalah ekosistem narasi tempat kebebasan menciptakan dunia (DMS) bertemu dengan kerasnya
+                mekanisme RPG.
+                Kami menyediakan wadah bagi berbagai gaya bermain, dari builder kreatif hingga petarung hardcore.
+            </p>
+        </div>
+
+        <div class="about-grid">
+            <!-- DMS -->
+            <div class="feature-card">
+                <h3>🌌 DMS (Dungeon Master System)</h3>
+                <p>Wadah bagi para kreator dunia.</p>
+                <ul>
+                    <li><strong>World Building:</strong> Ciptakan semesta narasi dan lore original kamu sendiri.</li>
+                    <li><strong>Rule Authority:</strong> Kendalikan aturan, alur cerita, dan faksi di wilayahmu.</li>
+                    <li><strong>Narrative Platform:</strong> Gunakan sistem kami sebagai basis untuk memimpin pemainmu.
+                    </li>
+                    <li>Mematuhi Peraturan DMS</li>
+                </ul>
+            </div>
+
+            <!-- RPG -->
+            <div class="feature-card">
+                <h3>⚔️ RPG SYSTEM</h3>
+                <p>Mekanik kompleks untuk pengalaman hardcore.</p>
+                <ul>
+                    <li><strong>Complex Progress:</strong> Leveling, persona customization, & equipment mendalam.</li>
+                    <li><strong>Economy & Crafting:</strong> Trade antar pemain & Crafting barang legendaris.</li>
+                    <li><strong>Daily Hunting:</strong> Hadapi ancaman berbeda setiap harinya.</li>
+                    <li>Konsep Albion Online (Zona) & Akademi System.</li>
+                </ul>
+            </div>
+
+            <!-- Music & Chill -->
+            <div class="feature-card">
+                <h3>🎵 Music & Chill Mode</h3>
+                <ul class="clean-list">
+                    <li><strong>Bot With YTMP3 & Spotify:</strong> Dengar musik favoritmu langsung di server.</li>
+                    <li><strong>Chill Mode:</strong> Mode santai tanpa akses Bot RPG untuk yang ingin rehat dari
+                        hardcore.</li>
+                </ul>
+            </div>
+
+            <!-- Hardcore -->
+            <div class="feature-card warning">
+                <h3>🩸 PRE-HARDCORE MECHANIC</h3>
+                <p><strong>Kematian memiliki harga.</strong></p>
+                <p>Saat karakter mati, seluruh item akan terjatuh (Full Drop). Jasad dan perlengkapanmu akan tetap
+                    berada di lokasi terakhir hingga ditemukan oleh pemain lain.</p>
+                <blockquote
+                    style="margin-top:1rem; font-style:italic; border-left:3px solid var(--primary); padding-left:1rem; color: var(--text-muted);">
+                    "Nihilthoria: Bukan sekadar bermain, tapi membangun dan bertahan hidup."
+                </blockquote>
+            </div>
+        </div>
+
+        <!-- Socials -->
+        <div class="connect-box" style="margin-top: 3rem; text-align: center;">
+            <h3 style="margin-bottom: 1rem;">🔗 STAY CONNECTED</h3>
+            <p style="margin-bottom: 2rem;">Pantau perkembangan fitur terbaru dan keseruan komunitas kami.</p>
+            <div class="social-btns">
+                <a href="https://www.tiktok.com/@nihilthoria.world?_r=1&_t=ZS-92ki4AOhNNn" target="_blank"
+                    class="btn-outline" style="border-color: #ff0050;">📱 TikTok Resmi</a>
+                <a href="https://discord.gg/YXgzXAkmmH" target="_blank" class="btn-primary"
+                    style="background: #5865F2;">💬 Join Discord Server</a>
+            </div>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px;">BOT CUSTOM +
+                FANTASY/DMS + CHILL</p>
+        </div>
+    </section>
+
+
+
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-logo">NIHILTHORIA</div>
+            <p>© 2026 Nihilthoria World - BahaF</p>
+            <div class="socials">
+                <a href="https://discord.gg/YXgzXAkmmH">Discord Invite</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Generic Modal -->
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body">
+                <!-- Dynamic Content Loading -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
