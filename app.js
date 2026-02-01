@@ -62,7 +62,7 @@ function copyToClipboard(text) {
 
 function openDiscord() {
     // Attempt to open Discord App
-    const inviteCode = 'YXgzXAkmmH';
+    const inviteCode = 'F7GQZNJUeq';
     const appUrl = `discord://invite/${inviteCode}`;
     const webUrl = `https://discord.gg/${inviteCode}`;
 
