@@ -46,72 +46,103 @@ body {
 .glass-nav {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    padding: 1.5rem 5%;
+    z-index: 1000;
+    padding: 1rem 5%;
+    background: rgba(10, 5, 20, 0.95);
+    /* Slightly darker for better contrast */
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(10, 5, 20, 0.8);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 1000;
+    box-sizing: border-box;
+    /* Critical for padding */
 }
 
 .logo-container {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.nav-logo {
-    width: 40px;
-    height: 40px;
-    filter: drop-shadow(0 0 5px var(--primary));
-}
-
-.brand {
     font-family: 'Philosopher', sans-serif;
+    font-weight: 700;
     font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    background: linear-gradient(45deg, var(--primary), var(--gold));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.logo-img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2.5rem;
+    gap: 2rem;
 }
 
-.nav-links a {
+.nav-links li a {
     color: var(--text-main);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     transition: 0.3s;
     text-transform: uppercase;
     letter-spacing: 1px;
+    position: relative;
 }
 
-.nav-links a:hover {
-    color: var(--primary);
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-glow);
+    transition: 0.3s;
+}
+
+.nav-links li a:hover {
+    color: white;
     text-shadow: 0 0 10px var(--primary-glow);
 }
 
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
 .join-btn {
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
-    background: linear-gradient(45deg, var(--primary), #4b0082);
-    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
-    text-decoration: none;
     color: white;
     font-weight: 700;
     font-size: 0.8rem;
     transition: 0.3s transform;
     display: inline-block;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 0.6rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.btn-primary:hover {
+    background: var(--primary-glow);
+    box-shadow: 0 0 15px var(--primary-glow);
+    border-color: var(--primary-glow);
 }
 
 .menu-toggle {
@@ -162,6 +193,15 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero.centered .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
 }
 
 .hero::before {
@@ -185,18 +225,37 @@ body {
     line-height: 1.1;
     margin-bottom: 1.5rem;
     position: relative;
-    color: var(--text-main);
+    color: white;
+    display: inline-block;
+    /* Clean text shadow for consistency */
+    text-shadow:
+        2px 2px 0px rgba(138, 43, 226, 0.8),
+        -1px -1px 0px rgba(0, 255, 255, 0.5);
+    animation: simpleGlitch 3s infinite;
 }
 
-.glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 2px;
-    text-shadow: -2px 0 #ff00c1;
-    top: 0;
-    overflow: hidden;
-    clip: rect(0, 900px, 0, 0);
-    animation: noise-anim 2s infinite linear alternate-reverse;
+/* Removed the heavy ::before/::after pseudo elements that were causing severe misalignment */
+
+@keyframes simpleGlitch {
+    0% {
+        transform: translate(0);
+    }
+
+    2% {
+        transform: translate(-2px, 1px);
+    }
+
+    4% {
+        transform: translate(2px, -1px);
+    }
+
+    6% {
+        transform: translate(0);
+    }
+
+    100% {
+        transform: translate(0);
+    }
 }
 
 .hero-subtext {
@@ -206,9 +265,108 @@ body {
     margin-bottom: 2.5rem;
 }
 
-.hero-btns {
+.hero-link-copy {
     display: flex;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 1rem;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.link-display {
+    padding: 0.8rem 1rem;
+    color: var(--gold);
+    font-weight: 700;
+    font-family: 'Philosopher', sans-serif;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.btn-copy {
+    flex: 1;
+    padding: 0.8rem;
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    /* Match open-app border width for height consistency */
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.btn-open-app {
+    flex: 1;
+    padding: 0.8rem;
+    background: transparent;
+    border: 1px solid white;
+    /* Make border white for visibility */
+    color: white;
+    /* Ensure text is white */
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.btn-open-app:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn-copy:hover {
+    background: var(--primary-glow);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.join-instructions {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #ffd700;
+    /* Use gold/bright color for visibility */
+    background: rgba(0, 0, 0, 0.5);
+    /* darker background for contrast */
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: 1px dashed var(--glass-border);
+    display: inline-block;
+    line-height: 1.6;
+}
+
+.join-instructions b {
+    color: white;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+
+/* Secondary instruction style */
+.redirect-hint {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #aaa;
+    font-style: italic;
 }
 
 .btn-glow {
@@ -276,25 +434,48 @@ body {
 
 .race-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
 }
 
 .race-card {
-    background: var(--glass);
+    background: rgba(20, 20, 30, 0.6);
     border: 1px solid var(--glass-border);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 15px;
     cursor: pointer;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    backdrop-filter: blur(5px);
 }
 
 .race-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(1.02);
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--primary);
+    box-shadow: 0 15px 35px rgba(138, 43, 226, 0.15);
+}
+
+.race-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.race-card:hover::before {
+    transform: translateX(100%);
 }
 
 .race-icon {
@@ -570,6 +751,15 @@ body {
         padding: 1rem 5%;
     }
 
+    .nav-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .brand {
+        font-size: 1.3rem;
+    }
+
     .menu-toggle {
         display: flex;
     }
@@ -701,7 +891,44 @@ body {
 
 @media (max-width: 480px) {
     .glitch-text {
-        font-size: 2rem;
+        font-size: 2.22rem;
+        word-break: break-word;
+    }
+
+    .hero-subtext {
+        font-size: 0.95rem;
+    }
+
+    .hero-link-copy {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.8rem;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .link-display {
+        border-bottom: 1px solid var(--glass-border);
+        border-radius: 5px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .btn-copy,
+    .btn-open-app {
+        width: 100%;
+        padding: 0.8rem;
+    }
+
+    .join-instructions {
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        border-radius: 10px;
+        line-height: 1.4;
     }
 
     .stats-grid {
@@ -1429,4 +1656,471 @@ body {
     100% {
         transform: translate3d(-100%, 0, 0);
     }
+}
+
+/* ==================== GALLERY STYLES ==================== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--glass-border);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    padding: 2rem 1rem 1rem;
+    transform: translateY(100%);
+    transition: 0.3s ease;
+}
+
+.gallery-item:hover .overlay {
+    transform: translateY(0);
+}
+
+.overlay span {
+    color: #fff;
+    font-weight: bold;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px #000;
+}
+
+/* ==================== SCROLL TO TOP ==================== */
+.scroll-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--primary);
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    z-index: 999;
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-top:hover {
+    transform: translateY(-5px);
+    background: #fff;
+    color: var(--primary);
+}
+
+
+/* ==================== WIKI STYLES ==================== */
+.wiki-section {
+    min-height: 800px;
+}
+
+.wiki-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+}
+
+.wiki-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.wiki-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Wiki Tables */
+.search-box {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+}
+
+.table-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid var(--glass-border);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+th {
+    color: var(--primary);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+td code {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    color: var(--gold);
+    font-family: monospace;
+}
+
+.badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge.rpg {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.badge.music {
+    background: #3498db;
+    color: #fff;
+}
+
+.badge.function {
+    background: #2ecc71;
+    color: #000;
+}
+
+.badge.economy {
+    background: var(--gold);
+    color: #000;
+}
+
+/* Wiki Cards (Jobs & Monsters) */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.wiki-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: 0.3s;
+}
+
+.wiki-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.lvl-badge {
+    background: #444;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* Job Cards */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.wiki-card.job {
+    text-align: center;
+}
+
+.job-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.perk-list {
+    text-align: left;
+    list-style: none;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.perk-list li::before {
+    content: "✔️";
+    margin-right: 0.5rem;
+    color: var(--uncommon);
+}
+
+/* ==================== TOOLS STYLES ==================== */
+/* Scroll Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Feature Cards (Narrative Hub) */
+.feature-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    padding: 2.5rem;
+    border-radius: 20px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card h3 {
+    margin-bottom: 1rem;
+    color: var(--gold);
+    font-family: 'Philosopher', sans-serif;
+    font-size: 1.4rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.5rem;
+}
+
+.feature-card ul li {
+    margin-bottom: 0.8rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.feature-card.warning {
+    border-color: rgba(255, 0, 0, 0.3);
+    background: linear-gradient(145deg, rgba(255, 0, 0, 0.05), transparent);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.tool-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.result-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.result-box.success {
+    color: var(--uncommon);
+    border: 1px solid var(--uncommon);
+}
+
+.result-box.fail {
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+/* ==================== MAP STYLES ==================== */
+.map-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 2px solid var(--glass-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.map-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.world-map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(0.8) sepia(0.2);
+    transition: 0.3s;
+}
+
+.world-map-img:hover {
+    filter: brightness(1) sepia(0);
+}
+
+.map-spot {
+    position: absolute;
+    font-size: 2rem;
+    cursor: pointer;
+    filter: drop-shadow(0 0 5px #000);
+    transition: 0.3s;
+}
+
+.map-spot:hover {
+    transform: scale(1.3) translateY(-5px);
+    z-index: 10;
+}
+
+/* Tooltip */
+.map-spot::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.map-spot:hover::after {
+    opacity: 1;
+    bottom: 130%;
 }

@@ -16,7 +16,7 @@
 
     <nav class="glass-nav">
         <div class="logo-container">
-            <img src="logo.png" alt="Nihilthoria Logo" class="nav-logo">
+            <img src="logo.png" alt="Nihilthoria Logo" class="logo-img">
             <span class="brand">NIHILTHORIA</span>
         </div>
 
@@ -29,54 +29,38 @@
         <div class="nav-container">
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#races">Races</a></li>
                 <li><a href="#about">About</a></li>
+                <li><a href="#races">Races</a></li>
             </ul>
             <div class="nav-btns">
-                <a href="https://discord.gg/YXgzXAkmmH" class="btn-primary join-btn">JOIN DISCORD</a>
+                <button onclick="openDiscord()" class="btn-primary join-btn">JOIN
+                    DISCORD</button>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="hero">
+    <section id="home" class="hero centered">
         <div class="hero-content">
             <h1 class="glitch-text" data-text="LEGENDS RISE HERE">LEGENDS RISE HERE</h1>
             <p class="hero-subtext">Pantau peringkat petualang terkuat di Nihilthoria secara real-time. Bergabunglah dan
                 ukir namamu dalam sejarah.</p>
-            <div class="hero-btns">
-                <button class="btn-glow" onclick="document.getElementById('races').scrollIntoView()">JELAJAHI
-                    DUNIA</button>
-                <button class="btn-outline" onclick="window.location.href='https://discord.gg/YXgzXAkmmH'">GABUNG
-                    SEKARANG</button>
+            <div class="hero-link-copy">
+                <div class="link-display">HTTPS://DISCORD.GG/YXGZXAKMMH</div>
+                <div class="hero-actions">
+                    <button class="btn-copy" onclick="copyToClipboard('https://discord.gg/YXgzXAkmmH')">COPY
+                        LINK</button>
+                    <button class="btn-open-app" onclick="openDiscord()">OPEN APP</button>
+                </div>
             </div>
-        </div>
-        <div class="hero-visual">
-            <img src="logo.png" alt="Ethereal Crown" class="floating-logo">
-        </div>
-    </section>
-
-    <!-- Activity Ticker -->
-    <div class="news-ticker-container">
-        <div class="ticker-label">LATEST EVENTS</div>
-        <div class="ticker-wrap">
-            <div class="ticker-move" id="activity-ticker">
-                <div class="ticker-item">Waiting for server updates...</div>
-            </div>
-        </div>
-    </div>
-
-
-    <section id="races" class="races-section">
-        <h2 class="section-title">RACES</h2>
-        <p class="section-desc">16 Ras Kuno yang membentuk dunia Nihilthoria.</p>
-        <!-- Race Grid Content Preserved (Shortened for brevity but logically here) -->
-        <div id="race-grid" class="race-grid">
-            <!-- Filled by JS -->
+            <p class="join-instructions">
+                <b>Cara bergabung:</b> Salin diatas lalu pergi ke discord, paste<br>
+                <span class="redirect-hint">Atau klik <b>OPEN APP</b> untuk dialihkan ke discord</span>
+            </p>
         </div>
     </section>
 
     <!-- About / Narrative Hub Section -->
-    <section id="about" class="about-section" style="padding: 100px 10%;">
+    <section id="about" class="about-section fade-in" style="padding: 100px 10%;">
         <div style="text-align: center; margin-bottom: 3rem;">
             <h2 class="section-title">THE NARRATIVE HUB</h2>
             <p class="section-desc">"Build Your World, Survive the Hardcore."</p>
@@ -87,7 +71,7 @@
             </p>
         </div>
 
-        <div class="about-grid">
+        <div class="about-grid fade-in">
             <!-- DMS -->
             <div class="feature-card">
                 <h3>🌌 DMS (Dungeon Master System)</h3>
@@ -135,23 +119,21 @@
                 </blockquote>
             </div>
         </div>
+    </section>
 
-        <!-- Socials -->
-        <div class="connect-box" style="margin-top: 3rem; text-align: center;">
-            <h3 style="margin-bottom: 1rem;">🔗 STAY CONNECTED</h3>
-            <p style="margin-bottom: 2rem;">Pantau perkembangan fitur terbaru dan keseruan komunitas kami.</p>
-            <div class="social-btns">
-                <a href="https://www.tiktok.com/@nihilthoria.world?_r=1&_t=ZS-92ki4AOhNNn" target="_blank"
-                    class="btn-outline" style="border-color: #ff0050;">📱 TikTok Resmi</a>
-                <a href="https://discord.gg/YXgzXAkmmH" target="_blank" class="btn-primary"
-                    style="background: #5865F2;">💬 Join Discord Server</a>
-            </div>
-            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px;">BOT CUSTOM +
-                FANTASY/DMS + CHILL</p>
+    <section id="races" class="races-section fade-in">
+        <h2 class="section-title">RACES</h2>
+        <p class="section-desc">16 Ras Kuno yang membentuk dunia Nihilthoria.</p>
+        <div id="race-grid" class="race-grid">
+            <!-- Filled by JS -->
         </div>
     </section>
 
-
+    <!-- Load Data Files -->
+    <script src="data/commands.js"></script>
+    <script src="data/monsters.js"></script>
+    <script src="data/jobs.js"></script>
+    <script src="data/items.js"></script>
 
     <footer class="glass-footer">
         <div class="footer-content">
@@ -172,6 +154,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Scroll To Top -->
+    <div class="scroll-top" onclick="window.scrollTo(0,0)">↑</div>
 
     <script src="app.js"></script>
 </body>

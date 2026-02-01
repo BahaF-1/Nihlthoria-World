@@ -5,6 +5,28 @@ function scrollToSection(sectionId) {
     }
 }
 
+// Hero Glitch Effect
+const hero = document.getElementById('home');
+
+// Scroll Animations
+document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach(el => observer.observe(el));
+});
+
 /* --- MODAL SYSTEM --- */
 const modal = document.getElementById('info-modal');
 const modalBody = document.getElementById('modal-body');
@@ -21,6 +43,36 @@ function closeModal() {
     setTimeout(() => {
         modalBody.innerHTML = '';
     }, 300);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        const originalText = btn.innerText;
+        btn.innerText = 'COPIED!';
+        btn.style.background = '#2ecc71';
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = '';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+
+function openDiscord() {
+    // Attempt to open Discord App
+    const inviteCode = 'YXgzXAkmmH';
+    const appUrl = `discord://invite/${inviteCode}`;
+    const webUrl = `https://discord.gg/${inviteCode}`;
+
+    // Try to open using custom protocol
+    window.location.href = appUrl;
+
+    // Fallback if app doesn't open (simple timeout approach)
+    setTimeout(() => {
+        window.open(webUrl, '_blank');
+    }, 500);
 }
 
 // Close on outside click
@@ -565,6 +617,7 @@ window.addEventListener('scroll', () => {
     }
 });
 
+
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     loadServerStats();
@@ -716,4 +769,146 @@ function calculateTimeRemaining(endTime) {
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
 }
+
+/* --- WIKI SYSTEM --- */
+function openWikiTab(tabId) {
+    // Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Content
+    document.querySelectorAll('.wiki-content').forEach(content => content.classList.remove('active'));
+    const target = document.getElementById(`tab-${tabId}`);
+    if (target) {
+        target.classList.add('active');
+        renderWiki(tabId);
+    }
+}
+
+function renderWiki(type) {
+    if (type === 'commands') {
+        const tbody = document.getElementById('cmd-body');
+        if (tbody.innerHTML.trim() === '') { // Render initial
+            tbody.innerHTML = COMMANDS_DATA.map(c => `
+                <tr>
+                    <td><code>${c.prefix}</code></td>
+                    <td><b>${c.cmd}</b></td>
+                    <td>${c.desc}</td>
+                    <td><span class="badge ${c.category.toLowerCase()}">${c.category}</span></td>
+                </tr>
+            `).join('');
+        }
+    } else if (type === 'monsters') {
+        const grid = document.getElementById('monster-grid');
+        if (grid.innerHTML.trim() === '') {
+            grid.innerHTML = MONSTERS_DATA.map(m => `
+                <div class="wiki-card monster ${m.type.toLowerCase()}">
+                    <div class="card-head">
+                        <h3>${m.name}</h3>
+                        <span class="lvl-badge">Lvl ${m.level}</span>
+                    </div>
+                    <div class="card-body">
+                        <p>📍 ${m.location}</p>
+                        <p>📦 Drops: ${m.drops.join(', ')}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } else if (type === 'jobs') {
+        const grid = document.getElementById('job-grid');
+        if (grid.innerHTML.trim() === '') {
+            grid.innerHTML = JOBS_DATA.map(j => `
+                <div class="wiki-card job">
+                    <div class="job-icon">${j.icon}</div>
+                    <h3>${j.name}</h3>
+                    <p style="font-size:0.9rem; color:#aaa; margin-bottom:1rem;">${j.description}</p>
+                    <ul class="perk-list">
+                        ${j.perks.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+    } else if (type === 'items') {
+        const tbody = document.getElementById('recipe-body');
+        if (tbody.innerHTML.trim() === '') {
+            tbody.innerHTML = RECIPES_DATA.map(r => `
+                <tr>
+                    <td style="color:var(--gold); font-weight:bold;">${r.result}</td>
+                    <td>${r.ingredients.map(i => `${i.qty}x ${i.name}`).join(', ')}</td>
+                    <td>${r.prof}</td>
+                </tr>
+            `).join('');
+        }
+    }
+}
+
+function searchCommands() {
+    const input = document.getElementById('cmd-search').value.toLowerCase();
+    const rows = document.querySelectorAll('#cmd-table tbody tr');
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+    });
+}
+
+/* --- TOOLS CALCULATOR --- */
+function calculateExp() {
+    const curr = parseInt(document.getElementById('calc-curr-lvl').value) || 1;
+    const target = parseInt(document.getElementById('calc-target-lvl').value) || 1;
+    const resultBox = document.querySelector('#calc-result span');
+
+    if (target <= curr) {
+        resultBox.innerText = "0";
+        return;
+    }
+
+    // Formula: Total XP = 50 * (level^2) - (current_xp... simplified for estimate)
+    // Simple sum for range:
+    let totalXp = 0;
+    for (let i = curr; i < target; i++) {
+        totalXp += (i * 100) + (i * i * 10); // Example RPG formula
+    }
+
+    resultBox.innerText = formatCompactNumber(totalXp);
+}
+
+function simulateUpgrade() {
+    const tier = document.getElementById('sim-tier').value;
+    const resultDiv = document.getElementById('sim-result');
+
+    let chance = 50; // Base 50%
+    if (tier == '1') chance += 10;
+    if (tier == '3') chance -= 10;
+
+    // Cleaning animation
+    resultDiv.innerHTML = 'Forging...';
+    resultDiv.className = 'result-box';
+
+    setTimeout(() => {
+        const roll = Math.random() * 100;
+        const success = roll <= chance;
+
+        if (success) {
+            resultDiv.innerHTML = `SUCCESS! 🎉 (Rolled: ${Math.floor(roll)})`;
+            resultDiv.classList.add('success');
+        } else {
+            resultDiv.innerHTML = `FAILED 💥 (Rolled: ${Math.floor(roll)})`;
+            resultDiv.classList.add('fail');
+        }
+    }, 1000);
+}
+
+// Scroll To Top Visibility
+window.addEventListener('scroll', () => {
+    const scrollBtn = document.querySelector('.scroll-top');
+    if (scrollBtn) {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    }
+});
+
 
